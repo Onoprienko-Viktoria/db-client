@@ -1,9 +1,12 @@
 package com.onoprienko.dbclient.entity;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class ReportData {
-    private boolean isUpdated;
+    private final boolean isUpdated;
     private int updatedCount;
     private List<String> columns;
     private List<String> values;
@@ -18,21 +21,5 @@ public class ReportData {
         this.isUpdated = isUpdated;
         this.columns = columns;
         this.values = values;
-    }
-
-    public int getUpdatedCount() {
-        return updatedCount;
-    }
-
-    public List<String> getColumns() {
-        return columns;
-    }
-
-    public List<String> getValues() {
-        return values;
-    }
-
-    public boolean isUpdated() {
-        return isUpdated;
     }
 }

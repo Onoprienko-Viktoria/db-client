@@ -2,24 +2,25 @@ package com.onoprienko.dbclient.executor;
 
 import com.onoprienko.dbclient.entity.DataBaseProperties;
 import com.onoprienko.dbclient.entity.ReportData;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-
+@Slf4j
 public class QueryExecutor {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
     private final DataBaseProperties dataBaseProperties;
 
-    public QueryExecutor(DataBaseProperties dataBaseProperties) {
+    public QueryExecutor(Properties properties) {
+        this.dataBaseProperties = new DataBaseProperties(properties.getProperty("db.url"),
+                properties.getProperty("db.user"), properties.getProperty("db.password"));
         try (Connection connection = DriverManager.getConnection(dataBaseProperties.getDbUrl(),
                 dataBaseProperties.getUser(), dataBaseProperties.getPassword())) {
-            this.dataBaseProperties = dataBaseProperties;
-            System.out.println("Get Data base connection");
+            log.info("Create data base connection");
         } catch (Exception e) {
-            System.out.println(ANSI_RED + "Can not connect to data base" + ANSI_RESET);
+            log.error("Can not connect to data base, ", e);
             throw new RuntimeException(e);
         }
     }
@@ -32,7 +33,7 @@ public class QueryExecutor {
             }
             return executeUpdate(query);
         } catch (SQLException e) {
-            System.out.println(ANSI_RED + "Exception while execute query: " + e.getMessage() + ANSI_RESET);
+            log.error("Exception while execute query: ", e);
             return null;
         }
     }

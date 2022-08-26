@@ -1,14 +1,13 @@
 package com.onoprienko.dbclient.executor;
 
-import com.onoprienko.dbclient.configuration.ConfigurationReader;
-import com.onoprienko.dbclient.entity.DataBaseProperties;
+import com.onoprienko.dbclient.utils.PropertiesReader;
 import org.junit.jupiter.api.Test;
 import org.postgresql.jdbc.PgResultSetMetaData;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -18,9 +17,10 @@ class QueryExecutorTest {
     String PROPERTIES_PATH = "./src/test/java/resources/configuration.properties";
 
     @Test
-    void getTableColumnsReturnColumns() throws IOException, SQLException {
-        DataBaseProperties dataBaseProperties = ConfigurationReader.readPropertiesFile(PROPERTIES_PATH);
-        QueryExecutor queryExecutor = new QueryExecutor(dataBaseProperties);
+    void getTableColumnsReturnColumns() throws SQLException {
+        PropertiesReader propertiesReader = new PropertiesReader();
+        Properties properties = propertiesReader.getProperties(PROPERTIES_PATH);
+        QueryExecutor queryExecutor = new QueryExecutor(properties);
         ResultSet resultSetMock = mock(ResultSet.class);
         PgResultSetMetaData pgResultSetMetaData = mock(PgResultSetMetaData.class);
         when(resultSetMock.getMetaData()).thenReturn(pgResultSetMetaData);
@@ -36,9 +36,10 @@ class QueryExecutorTest {
     }
 
     @Test
-    void getTableValuesReturnValues() throws SQLException, IOException {
-        DataBaseProperties dataBaseProperties = ConfigurationReader.readPropertiesFile(PROPERTIES_PATH);
-        QueryExecutor queryExecutor = new QueryExecutor(dataBaseProperties);
+    void getTableValuesReturnValues() throws SQLException {
+        PropertiesReader propertiesReader = new PropertiesReader();
+        Properties properties = propertiesReader.getProperties(PROPERTIES_PATH);
+        QueryExecutor queryExecutor = new QueryExecutor(properties);
         ResultSet resultSetMock = mock(ResultSet.class);
         when(resultSetMock.next()).thenReturn(true).thenReturn(true).thenReturn(false);
         when(resultSetMock.getObject("id")).thenReturn("1").thenReturn("2");
